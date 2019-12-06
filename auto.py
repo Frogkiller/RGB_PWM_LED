@@ -4,8 +4,9 @@ import math
 import Adafruit_PCA9685
 import OPi.GPIO as GPIO
 
+PIN_NAME = "PA01"
 GPIO.setmode(GPIO.SUNXI)
-GPIO.setup("PA00", GPIO.IN, pull_up_down=GPIO.PUD_OFF)
+GPIO.setup(PIN_NAME, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
 
 class Led:
     def __init__(self):
@@ -61,10 +62,10 @@ class Led:
         pin_state = 0
         while True:
             time.sleep(0.1)
-            if GPIO.input("PA00") and pin_state==0:
+            if GPIO.input(PIN_NAME) and pin_state==0:
                 pin_state = 1
                 self.light_on()
-            if GPIO.input("PA00")==0 and pin_state==1:
+            if GPIO.input(PIN_NAME)==0 and pin_state==1:
                 pin_state = 0
                 self.light_off()
 
