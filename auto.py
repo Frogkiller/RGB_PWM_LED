@@ -98,9 +98,9 @@ class Led:
                 pin_state = 1
                 state_duration_off = time.time() - switch_time
                 switch_time = time.time()
-                if state_duration_off< 100 and state_duration_on < 100:
+                if state_duration_off < 1 and state_duration_on < 1:
                     self.party = True
-                    print("party")
+                    print("party", state_duration_off, state_duration_on)
                 self.set_deltas(pin_state)
                 # self.light_on()
             if GPIO.input(PIN_NAME)==0 and pin_state==1:
