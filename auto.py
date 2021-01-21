@@ -13,9 +13,6 @@ GPIO.setup(PIN_NAME, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
 class Led:
     def __init__(self):
         self.rgb = [0,0,0]
-        self.r = 0
-        self.g = 0
-        self.b = 0
         self.party = True
         self.target_party = [0,0,0]
         self.delta = [0,0,0]
@@ -29,9 +26,6 @@ class Led:
 
     def set_rgb(self,red,green,blue):
         self.rgb = [red, green, blue]
-        self.r = red
-        self.g = green
-        self.b = blue
         red=self.cor(red)
         green=self.cor(green)
         blue=self.cor(blue)
@@ -51,28 +45,25 @@ class Led:
             self.party_next(pin_state)
 
     def normal_next(self, pin_state):
-        if pin_state == 1 and (self.r!= self.target[0] or self.g != self.target[1] or self.b != self.target[2]):
-            self.set_rgb(min(self.r+self.delta[0],self.target[0]),min(self.g+self.delta[1],self.target[1]),min(self.b+self.delta[2],self.target[2]))
-        elif pin_state == 0 and (self.r!= 0 or self.g!=0 or self.b!=0):
-            self.set_rgb(max(0, self.r - self.delta[0]),max(0,self.g - self.delta[1]),max(0,self.b - self.delta[2]))
+        if pin_state == 1 and (self.rgb[0]!= self.target[0] or self.rgb[1] != self.target[1] or self.rgb[2] != self.target[2]):
+            self.set_rgb(min(self.rgb[0]+self.delta[0],self.target[0]),min(self.rgb[1]+self.delta[1],self.target[1]),min(self.rgb[2]+self.delta[2],self.target[2]))
+        elif pin_state == 0 and (self.rgb[0]!= 0 or self.rgb[1]!=0 or self.rgb[2]!=0):
+            self.set_rgb(max(0, self.rgb[0] - self.delta[0]),max(0,self.rgb[1] - self.delta[1]),max(0,self.rgb[2] - self.delta[2]))
 
     def random_target(self):
         self.target_party = [random.randint(10, 255), random.randint(10, 255), random.randint(10, 255)]
-        return random.randint(10, 50)
+        return random.randint(15, 40)
         
     def party_next(self, pin_state):
-        print("party time")
-        if self.target_party == [0,0,0] or (self.r == self.target_party[0] and self.g == self.target_party[1] and self.b == self.target_party[2]):
-            print("randoming time")
+        if self.target_party == [0,0,0] or (self.rgb[0] == self.target_party[0] and self.rgb[1] == self.target_party[1] and self.rgb[2] == self.target_party[2]):
             timer = self.random_target()
-            self.delta = [(self.target_party[0]-self.r)/timer, (self.target_party[1]-self.g)/timer, (self.target_party[2]-self.b)/timer]
+            self.delta = [(self.target_party[0]-self.rgb[0])/timer, (self.target_party[1]-self.rgb[1])/timer, (self.target_party[2]-self.rgb[2])/timer]
         targets = [0,0,0]
         for i, x in enumerate(self.delta):
             if x<0:
                 targets[i] = max(self.target_party[i], self.rgb[i] + self.delta[i])
             else:
                 targets[i] = min(self.target_party[i], self.rgb[i] + self.delta[i])
-        print(*targets)
         self.set_rgb(*targets)
 
     def set_deltas(self, pin_state):
@@ -80,7 +71,7 @@ class Led:
             if pin_state == 1:
                 self.delta = [self.target[0]/50, self.target[1]/50, self.target[2]/50]
             else: 
-                self.delta = [self.r/50, self.g/50, self.b/50]
+                self.delta = [self.rgb[0]/50, self.rgb[1]/50, self.rgb[2]/50]
         else:
             pass
             
