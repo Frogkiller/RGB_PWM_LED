@@ -59,15 +59,18 @@ class Led:
         return random.randint(10, 50)
         
     def party_next(self, pin_state):
+        print("party time")
         if self.target_party == [0,0,0] or (self.r == self.target_party[0] and self.g == self.target_party[1] and self.b == self.target_party[2]):
+            print("randoming time")
             timer = self.random_target
-            self.delta = [self.target_party[0]-self.r, self.target_party[1]-self.g, self.target_party[2]-self.b]
+            self.delta = [(self.target_party[0]-self.r)/timer, (self.target_party[1]-self.g)/timer, (self.target_party[2]-self.b)/timer]
         targets = [0,0,0]
         for i, x in enumerate(self.delta):
             if x<0:
                 targets[i] = max(self.target_party[i], self.r + self.delta[i])
             else:
                 targets[i] = min(self.target_party[i], self.r + self.delta[i])
+        print(*targets)
         self.set_rgb(*targets)
 
     def set_deltas(self, pin_state):
