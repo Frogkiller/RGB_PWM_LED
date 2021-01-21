@@ -1,6 +1,8 @@
 import time
 import math
 
+#party_mode on
+
 import Adafruit_PCA9685
 import OPi.GPIO as GPIO
 
