@@ -62,7 +62,7 @@ class Led:
         print("party time")
         if self.target_party == [0,0,0] or (self.r == self.target_party[0] and self.g == self.target_party[1] and self.b == self.target_party[2]):
             print("randoming time")
-            timer = self.random_target
+            timer = self.random_target()
             self.delta = [(self.target_party[0]-self.r)/timer, (self.target_party[1]-self.g)/timer, (self.target_party[2]-self.b)/timer]
         targets = [0,0,0]
         for i, x in enumerate(self.delta):
