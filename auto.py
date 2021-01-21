@@ -12,6 +12,7 @@ GPIO.setup(PIN_NAME, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
 
 class Led:
     def __init__(self):
+        self.rgb = [0,0,0]
         self.r = 0
         self.g = 0
         self.b = 0
@@ -27,6 +28,7 @@ class Led:
         self.pwm.set_pwm(8,0,green)
 
     def set_rgb(self,red,green,blue):
+        self.rgb = [red, green, blue]
         self.r = red
         self.g = green
         self.b = blue
@@ -67,9 +69,9 @@ class Led:
         targets = [0,0,0]
         for i, x in enumerate(self.delta):
             if x<0:
-                targets[i] = max(self.target_party[i], self.r + self.delta[i])
+                targets[i] = max(self.target_party[i], self.rgb[i] + self.delta[i])
             else:
-                targets[i] = min(self.target_party[i], self.r + self.delta[i])
+                targets[i] = min(self.target_party[i], self.rgb[i] + self.delta[i])
         print(*targets)
         self.set_rgb(*targets)
 
