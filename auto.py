@@ -15,7 +15,7 @@ class Led:
         self.r = 0
         self.g = 0
         self.b = 0
-        self.party = False
+        self.party = True
         self.target_party = [0,0,0]
         self.delta = [0,0,0]
         self.target = [80,0,100]
@@ -59,7 +59,7 @@ class Led:
         return random.randint(10, 50)
         
     def party_next(self, pin_state):
-        if (self.r == self.target_party[0] and self.g == self.target_party[1] and self.b == self.target_party[2]):
+        if self.target_party == [0,0,0] or (self.r == self.target_party[0] and self.g == self.target_party[1] and self.b == self.target_party[2]):
             timer = self.random_target
             self.delta = [self.target_party[0]-self.r, self.target_party[1]-self.g, self.target_party[2]-self.b]
         targets = [0,0,0]
