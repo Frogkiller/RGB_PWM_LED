@@ -67,9 +67,9 @@ class Led:
         targets = [0,0,0]
         for i, x in enumerate(self.delta):
             if x<0:
-                targets[i] = max(self.target_party[i], int(self.r + self.delta[i]))
+                targets[i] = max(self.target_party[i], self.r + self.delta[i])
             else:
-                targets[i] = min(self.target_party[i], int(self.r + self.delta[i]))
+                targets[i] = min(self.target_party[i], self.r + self.delta[i])
         print(*targets)
         self.set_rgb(*targets)
 
