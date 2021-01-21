@@ -1,5 +1,5 @@
 import time
-import math
+import random
 
 #party_mode on
 
@@ -16,6 +16,7 @@ class Led:
         self.g = 0
         self.b = 0
         self.party = False
+        self.target_party = [0,0,0]
         self.delta = [0,0,0]
         self.target = [80,0,100]
         self.pwm = Adafruit_PCA9685.PCA9685(address=0x40, busnum=0)
@@ -33,26 +34,6 @@ class Led:
         green=self.cor(green)
         blue=self.cor(blue)
         self.set_rgb_raw(red,green,blue)
-
-    # def off(self):
-    #     self.set_rgb(0,0,0)
-
-    # def light_on(self):
-    #     delta_r = (self.target[0]-self.r)/100
-    #     delta_g = (self.target[1]-self.g)/100
-    #     delta_b = (self.target[2]-self.b)/100
-    #     while self.r!= self.target[0] or self.g != self.target[1] or self.b != self.target[2]: 
-    #         time.sleep(0.01)
-    #         self.set_rgb(min(self.r+delta_r,self.target[0]),min(self.g+delta_g,self.target[1]),min(self.b+delta_b,self.target[2]))
-    #         print(delta_r,delta_g,delta_b,min(self.r+delta_r,self.target[0]),min(self.g+delta_g,self.target[1]),min(self.b+delta_b,self.target[2]))
-
-    # def light_off(self):
-    #     delta_r = self.r/100
-    #     delta_g = self.g/100
-    #     delta_b = self.b/100
-    #     while self.r!= 0 or self.g!=0 or self.b!=0:
-    #         time.sleep(0.05)
-    #         self.set_rgb(max(self.r-delta_r,0),max(0,self.g - delta_g),max(0,self.b - delta_b))
 
     def cor(self, x):
         gamma=2.8
@@ -72,9 +53,22 @@ class Led:
             self.set_rgb(min(self.r+self.delta[0],self.target[0]),min(self.g+self.delta[1],self.target[1]),min(self.b+self.delta[2],self.target[2]))
         elif pin_state == 0 and (self.r!= 0 or self.g!=0 or self.b!=0):
             self.set_rgb(max(0, self.r - self.delta[0]),max(0,self.g - self.delta[1]),max(0,self.b - self.delta[2]))
+
+    def random_target(self):
+        self.target_party = [random.randint(10, 255), random.randint(10, 255), random.randint(10, 255)]
+        return random.randint(10, 50)
         
     def party_next(self, pin_state):
-        pass
+        if (self.r == self.target_party[0] and self.g == self.target_party[1] and self.b == self.target_party[2]):
+            timer = self.random_target
+            self.delta = [self.target_party[0]-self.r, self.target_party[1]-self.g, self.target_party[2]-self.b]
+        targets = [0,0,0]
+        for i, x in enumerate(self.delta):
+            if x<0:
+                targets[i] = max(self.target_party[i], self.r + self.delta[i])
+            else:
+                targets[i] = min(self.target_party[i], self.r + self.delta[i])
+        self.set_rgb(*targets)
 
     def set_deltas(self, pin_state):
         if self.party == False:
@@ -103,15 +97,14 @@ class Led:
                     self.party = True
                     print("party", state_duration_off, state_duration_on)
                 self.set_deltas(pin_state)
-                # self.light_on()
             if GPIO.input(PIN_NAME)==0 and pin_state==1:
                 pin_state = 0
                 state_duration_on = time.time() - switch_time
                 switch_time = time.time()
                 self.party = False
+                self.target_party = [0,0,0]
                 print("off", state_duration_off, state_duration_on, switch_time)
                 self.set_deltas(pin_state)
-                # self.light_off()
             self.next_value(pin_state)
             
 
