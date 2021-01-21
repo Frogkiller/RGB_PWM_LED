@@ -81,7 +81,7 @@ class Led:
             if pin_state == 1:
                 self.delta = [self.target[0]/50, self.target[1]/50, self.target[2]/50]
             else: 
-                self.delta = [self.r/100, self.g/100, self.b/100]
+                self.delta = [self.r/50, self.g/50, self.b/50]
         else:
             pass
             
@@ -99,7 +99,7 @@ class Led:
                 state_duration_off = time.time() - switch_time
                 switch_time = time.time()
                 print("on", state_duration_off, state_duration_on, switch_time)
-                if state_duration_off < 2 and state_duration_on < 10:
+                if state_duration_off < 10 and state_duration_on < 10:
                     self.party = True
                     print("party", state_duration_off, state_duration_on)
                 self.set_deltas(pin_state)
