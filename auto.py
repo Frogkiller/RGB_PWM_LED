@@ -98,6 +98,7 @@ class Led:
                 pin_state = 1
                 state_duration_off = time.time() - switch_time
                 switch_time = time.time()
+                print("on", state_duration_off, state_duration_on, switch_time)
                 if state_duration_off < 1 and state_duration_on < 1:
                     self.party = True
                     print("party", state_duration_off, state_duration_on)
@@ -108,6 +109,7 @@ class Led:
                 state_duration_on = time.time() - switch_time
                 switch_time = time.time()
                 self.party = False
+                print("on", state_duration_off, state_duration_on, switch_time)
                 self.set_deltas(pin_state)
                 # self.light_off()
             self.next_value(pin_state)
